@@ -40,7 +40,7 @@
         -->
         </div>
 
-        <div id="main">
+        <div id="main"> <!-- vue controls this -->
             <!--
             <input id="name" v-model="name_input"></input>
             <button @click="sendName">Submit</button> -->
@@ -56,10 +56,36 @@
                 <p class="lastname"> {{human.lastname}}</p>
         </div>
 
+
+        <div id=firebaseStuff">
+            <div>
+                <h4>Cheese Pizza</h4>
+                Number  of votes: {{cheeseVotes}}
+            </div>
+            <div>
+                <h4>Pepperoni Pizza</h4>
+                Number of votes: {{pepperoniVotes}}
+            </div>
+        </div>
+
         <div id="d3chart">
             <div id="selected"></div>
         </div>
 
+
+    <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey:  fil in with oyur own
+        authDomain:  fil in with oyur own
+        databaseURL: fil in with oyur own
+        projectId: fil in with oyur own
+        storageBucket: "neurohack-web.appspot.com",
+        messagingSenderId:  fil in with oyur own
+      };
+      firebase.initializeApp(config);
+    </script>
     <script src="/static/js/axios.min.js"></script>
     <script src="/static/js/d3.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
@@ -82,6 +108,8 @@
     //            var container = d3.select('#response').text(resp.data)
     //        })   
     //    }
+        var db = firebase.database();
+
         var app = new Vue({
             el: '#main',
             data: {
@@ -89,6 +117,8 @@
                 name_input: '',
                 firstname_input: '',
                 lastname_input: '',
+                cheeseVotes: 0,
+                pepperoniVotes: 0,
                 address_book: [
                     {
                         firstname: 'harry',
@@ -124,6 +154,13 @@
                 }
                 },
             })
+         // example getting cheese value from flavors
+        db.ref("pizzaFlavors")
+          .child("cheese")
+          .on("value", function(snap){
+          var cheeseVotes = snap.val();
+          app.cheeseVotes = cheeseVotes;
+        })
     </script>
 
     </body>
