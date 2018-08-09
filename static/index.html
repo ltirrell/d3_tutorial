@@ -1,0 +1,130 @@
+<!--
+    crappy comment
+-->
+<html>
+    <head>
+        <title>d3 tutorial</title>
+        <style>
+            .bar {
+                height: 50px;
+                background: steelblue;
+                margin: 5px;
+                color: white;
+                text-align: end;
+                padding: 5px;
+            }
+            .person{
+                margin: 10px;
+                border-style: dashed;
+                border-color: "grey";
+                padding: 20px;
+            }
+            .firstname {
+                color: purple;
+                font-size: 1.2em;
+            }
+
+            .lastname {
+                color: green;
+                font-size: 0.8em;
+            }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="chart">
+            <!---
+            <div class="bar" style="width:50px;">50</div>
+            <div class="bar" style="width:150px;">150</div>
+            <div class="bar" style="width:75px;">75</div>
+        -->
+        </div>
+
+        <div id="main">
+            <!--
+            <input id="name" v-model="name_input"></input>
+            <button @click="sendName">Submit</button> -->
+            <form @submit="add_to_address_book(this)">
+                First Name: <input v-model="firstname_input"></input>
+                Last Name: <input v-model="lastname_input"></input>
+                <button @click="add_to_address_book">Submit</button>
+                <p id="response">{{message}}</p>
+                <p>{{name_input}}</p>
+            </form>
+            <div class="person" v-for="(human,index) in address_book">
+                <p class="firstname">{{index + 1 + ": "}} {{human.firstname}}</p>  
+                <p class="lastname"> {{human.lastname}}</p>
+        </div>
+
+        <div id="d3chart">
+            <div id="selected"></div>
+        </div>
+
+    <script src="/static/js/axios.min.js"></script>
+    <script src="/static/js/d3.min.js"></script>
+    <script src="/static/js/vue.min.js"></script>
+
+    <script src="/static/js/chart.js"></script>
+
+    <script>
+    //    function sendName() {
+    //        // grab value frm element with id=name
+    //        var el = document.getElementById('name');
+    //        var value = el.value;
+    //        console.log('value is ', value);
+    //        // send the value to the server
+    //        axios.get('/user/' + value).then(function(resp){
+    //            console.log('response from the server is ', resp);
+    //            var server_resp = resp.data;
+    //            // update the paragraph with id=response with the stuff server
+    //            // var container = document.getElementById('response');
+    //            // container.innerHTML = server_resp;
+    //            var container = d3.select('#response').text(resp.data)
+    //        })   
+    //    }
+        var app = new Vue({
+            el: '#main',
+            data: {
+                message: 'hello ',
+                name_input: '',
+                firstname_input: '',
+                lastname_input: '',
+                address_book: [
+                    {
+                        firstname: 'harry',
+                        lastname: 'potter'
+                    },
+                    {
+                        firstname: 'hermoine',
+                        lastname: 'granger'
+                    },
+                    {
+                        firstname: 'ron',
+                        lastname: 'weasley'
+                    },
+                ],
+                },
+            methods: {
+                sendName: function(){
+                    var _this = this;
+                    axios.get('/user/' + this.name_input)
+                         .then(function(resp){
+                            _this.message = resp.data;
+                         })
+                    },
+                add_to_address_book: function(e){
+                                    // push a dictionary {firstname: , lastname:} to addressbook
+                                    if (e) {
+                                        e.preventDefault();
+                                    }
+                                    this.address_book.push({
+                                        firstname: this.firstname_input,
+                                        lastname: this.lastname_input,
+                                    })
+                }
+                },
+            })
+    </script>
+
+    </body>
+</html>
